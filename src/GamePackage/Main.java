@@ -8,6 +8,6 @@ public class Main {
         Simulation simulation = new Simulation(20);
         simulation.startSimulation();
         Renderer renderer = new Renderer();
-        renderer.renderAll();
+        renderer.renderAll(Simulation.getMap());
     }
 }

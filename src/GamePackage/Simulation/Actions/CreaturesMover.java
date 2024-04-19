@@ -8,23 +8,25 @@ import GamePackage.Simulation.Coordinates;
 import GamePackage.Simulation.Simulation;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class MoveCreatures extends Action {
+public class CreaturesMover extends Action {
     @Override
     public void perform() {
 
     }
 
     private void getCreatures() {
-        ArrayList<Entity> herbivores = new ArrayList<>();
-        ArrayList<Entity> predators = new ArrayList<>();
-        ArrayList<Entity> grasses = new ArrayList<>();
+        List<Entity> herbivores = new ArrayList<>();
+        List<Entity> predators = new ArrayList<>();
+        List<Entity> grasses = new ArrayList<>();
         for (Coordinates key : Simulation.getMap().keySet()) {
             if (Simulation.getMap().get(key) instanceof Herbivore)
                 herbivores.add(Simulation.getMap().get(key));
             if (Simulation.getMap().get(key) instanceof Predator)
                 predators.add(Simulation.getMap().get(key));
-            if (Simulation.getMap().get(key) instanceof Grass) grasses.add(Simulation.getMap().get(key));
+            if (Simulation.getMap().get(key) instanceof Grass)
+                grasses.add(Simulation.getMap().get(key));
         }
         for (Entity herbivore : herbivores
         ) {
@@ -39,7 +41,7 @@ public class MoveCreatures extends Action {
 
     }
 
-    private Entity getNearestEntity(Entity entity, ArrayList<Entity> list) {
+    private Entity getNearestEntity(Entity entity, List<Entity> list) {
         for (Entity entity1 : list
         ) {
             if (Math.abs(entity.getCoordinates().x() - entity1.getCoordinates().x()) <= 1 &&

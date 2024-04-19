@@ -6,8 +6,6 @@ import GamePackage.Entyties.Entity;
 import GamePackage.Entyties.Grass;
 import GamePackage.Entyties.Rock;
 import GamePackage.Entyties.Tree;
-import GamePackage.Simulation.Coordinates;
-import GamePackage.Simulation.Simulation;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,24 +15,23 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Renderer {
-    private static BufferedImage GRASS;
-    private static BufferedImage ROCK;
-    private static BufferedImage TREE;
-    private static BufferedImage HERBIVORE;
-    private static BufferedImage PREDATOR;
+    private Map<Class, BufferedImage> sprites;
 
     public Renderer() {
         setImages();
+        sprites = new HashMap<>();
     }
 
-    public void renderAll() {
+    public void renderAll(Map<Coordinates, Entity> map) {
         JFrame frame = new JFrame("Simulation");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         createAndAddButtons(frame.getContentPane());
-        frame.getContentPane().add(new MapRenderer());
+        frame.getContentPane().add(new MapRenderer(map, sprites));
         frame.setBounds(760, 340, 400, 400);
         frame.setVisible(true);
     }
@@ -67,57 +64,13 @@ public class Renderer {
 
     private void setImages() {
         try {
-            GRASS = ImageIO.read(new File("src/GamePackage/Sprites/Grass.png"));
-            ROCK = ImageIO.read(new File("src/GamePackage/Sprites/Rock.png"));
-            TREE = ImageIO.read(new File("src/GamePackage/Sprites/Tree.png"));
-            HERBIVORE = ImageIO.read(new File("src/GamePackage/Sprites/Herbivore.png"));
-            PREDATOR = ImageIO.read(new File("src/GamePackage/Sprites/Predator.png"));
+            sprites.put(Grass.class, ImageIO.read(new File("src/GamePackage/Sprites/Grass.png")));
+            sprites.put(Rock.class, ImageIO.read(new File("src/GamePackage/Sprites/Rock.png")));
+            sprites.put(Tree.class, ImageIO.read(new File("src/GamePackage/Sprites/Tree.png")));
+            sprites.put(Herbivore.class, ImageIO.read(new File("src/GamePackage/Sprites/Herbivore.png")));
+            sprites.put(Predator.class, ImageIO.read(new File("src/GamePackage/Sprites/Predator.png")));
         } catch (IOException e) {
             System.out.println("Ошибочка");
         }
     }
-
-    static class MapRenderer extends JComponent {
-
-
-        public void paint(Graphics g) {
-            paintGrid(g);
-            paintSprites(g);
-        }
-
-
-        private void paintSprites(Graphics g) {
-            for (Coordinates coordinates : Simulation.getMap().keySet()) {
-                int cellSize = 16;
-                g.drawImage(checkTypeOfEntity(Simulation.getMap().get(coordinates)), coordinates.x() * cellSize, coordinates.y() * cellSize, null);
-            }
-
-        }
-        private void paintGrid(Graphics g) {
-            int cellSize = 16;
-            for (int i = 0; i < Simulation.getMapSize() + 1; i++)
-                g.drawLine(0, i * cellSize, Simulation.getMapSize() * cellSize, i * cellSize);
-
-            for (int i = 0; i < Simulation.getMapSize() + 1; i++)
-                g.drawLine(i * cellSize, 0, i * cellSize, Simulation.getMapSize() * cellSize);
-        }
-
-        private BufferedImage checkTypeOfEntity(Entity entity) {
-            if (entity instanceof Grass) return GRASS;
-            else if (entity instanceof Rock) return ROCK;
-            else if (entity instanceof Tree) return TREE;
-            else if (entity instanceof Herbivore) return HERBIVORE;
-            else if (entity instanceof Predator) return PREDATOR;
-            else return null;
-        }
-    }
-
-    static class GridRenderer extends JComponent {
-        public void paint(Graphics g) {
-        }
-
-
-    }
-
-
 }

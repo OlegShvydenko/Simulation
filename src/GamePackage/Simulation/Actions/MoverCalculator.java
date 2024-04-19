@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.Stack;
 
-public class Mover {
+public class MoverCalculator {
     public static class Details {
         double value;
         int i;
