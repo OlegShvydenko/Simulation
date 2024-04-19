@@ -1,9 +1,9 @@
-package GamePackage;
+package GamePackage.Entyties;
 
 import GamePackage.Simulation.Coordinates;
 
 public abstract class Entity {
-    protected Coordinates coordinates;
+    private Coordinates coordinates;
     public Entity(Coordinates coordinates){
         this.coordinates = coordinates;
     }

@@ -1,16 +1,17 @@
-package GamePackage.Entyties;
+package GamePackage.Entyties.Creatures;
 
 
-import GamePackage.Entity;
+import GamePackage.Entyties.Entity;
 import GamePackage.Simulation.Coordinates;
+import GamePackage.Simulation.Simulation;
 
 
 public abstract class Creature extends Entity {
-    protected int speed;
-    protected int healthPoints;
+    private int speed;
+    private int healthPoints;
 
-    protected int fullnessOfFood;
-    protected boolean alreadyMoving;
+    int fullnessOfFood;
+    private boolean alreadyMoving;
 
     public Creature(Coordinates coordinates, int speed, int healthPoints, int fullnessOfFood){
         super(coordinates);
@@ -51,8 +52,13 @@ public abstract class Creature extends Entity {
         this.alreadyMoving = alreadyMoving;
     }
 
-    public abstract void makeMove();
-
+    public void makeMove(Coordinates coordinates) {
+        Simulation.getMap().remove(this.getCoordinates());
+        this.setCoordinates(coordinates);
+        Simulation.getMap().put(coordinates, this);
+        this.alreadyMoving = true;
+    }
+    public abstract void eat(Entity entity);
 
 
 }

@@ -1,20 +1,21 @@
 package GamePackage.Entyties.Creatures;
 
 
-import GamePackage.Entyties.Creature;
+import GamePackage.Entyties.Entity;
 import GamePackage.Entyties.Grass;
 import GamePackage.Simulation.Coordinates;
+import GamePackage.Simulation.Simulation;
 
 public class Herbivore extends Creature {
     public Herbivore(Coordinates coordinates, int speed, int healthPoints, int fullnessOfFood) {
         super(coordinates, speed, healthPoints, fullnessOfFood);
     }
-    @Override
-    public void makeMove() {
 
+    @Override
+    public void eat(Entity entity) {
+        this.fullnessOfFood += ((Grass) entity).getQuantity();
+        Simulation.getMap().remove(entity.getCoordinates());
+        this.setAlreadyMoving(true);
     }
-    public void eat(Grass grass) {
-        this.fullnessOfFood += grass.getQuantity();
-        grass.setQuantity(0);
-    }
+
 }

@@ -1,6 +1,6 @@
 package GamePackage.Simulation.Actions;
 
-import GamePackage.Entity;
+import GamePackage.Entyties.Entity;
 import GamePackage.Simulation.Coordinates;
 import GamePackage.Simulation.Simulation;
 

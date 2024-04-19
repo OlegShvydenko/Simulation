@@ -1,7 +1,10 @@
 package GamePackage.Simulation.Actions;
 
 import GamePackage.Simulation.Coordinates;
+import GamePackage.Simulation.Simulation;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.Stack;
 
@@ -17,6 +20,7 @@ public class Mover {
             this.j = j;
         }
     }
+
     public static class Cell {
         public Coordinates parent;
         // f = g + h, where h is heuristic
@@ -38,7 +42,7 @@ public class Mover {
     }
 
     // method to check if our cell (row, col) is valid
-    boolean isValid(int rows, int cols,
+    private boolean isValid(int rows, int cols,
                     Coordinates point) {
         if (rows > 0 && cols > 0)
             return (point.x() >= 0) && (point.x() < rows)
@@ -50,25 +54,25 @@ public class Mover {
 
     //is the cell blocked?
 
-    boolean isUnBlocked(int[][] grid, int rows, int cols,
+    private boolean isUnBlocked(int rows, int cols,
                         Coordinates point) {
         return isValid(rows, cols, point)
-                && grid[point.x()][point.y()] == 1;
+                && !Simulation.getMap().containsKey(point);
     }
 
     //Method to check if destination cell has been already reached
-    boolean isDestination(Coordinates position, Coordinates dest) {
+    private boolean isDestination(Coordinates position, Coordinates dest) {
         return position == dest || position.equals(dest);
     }
 
     // Method to calculate heuristic function
-    double calculateHValue(Coordinates src, Coordinates dest) {
+    private double calculateHValue(Coordinates src, Coordinates dest) {
         return Math.sqrt(Math.pow((src.x() - dest.x()), 2.0) + Math.pow((src.y() - dest.y()), 2.0));
     }
 
     // Method for tracking the path from source to destination
 
-    void tracePath(
+    private ArrayList<Coordinates> tracePath(
             Cell[][] cellDetails,
             Coordinates dest) {   //A* Search algorithm path
         System.out.println("The Path:  ");
@@ -87,43 +91,40 @@ public class Mover {
         } while (cellDetails[row][col].parent != nextNode); // until src
 
 
-        while (!path.empty()) {
-            Coordinates p = path.peek();
-            path.pop();
-            System.out.println("-> (" + p.x() + "," + p.y() + ") ");
-        }
+        ArrayList<Coordinates> list = new ArrayList<>(path);
+        Collections.reverse(list);
+        return list;
     }
 
 // A main method, A* Search algorithm to find the shortest path
 
-    void aStarSearch(int[][] grid,
-                     int rows,
-                     int cols,
-                     Coordinates src,
-                     Coordinates dest) {
+    private ArrayList<Coordinates> aStarSearch(Coordinates src,
+                                 Coordinates dest,
+                                 int rows,
+                                 int cols) {
 
         if (!isValid(rows, cols, src)) {
             System.out.println("Source is invalid...");
-            return;
+            return null;
         }
 
 
         if (!isValid(rows, cols, dest)) {
             System.out.println("Destination is invalid...");
-            return;
+            return null;
         }
 
 
-        if (!isUnBlocked(grid, rows, cols, src)
-                || !isUnBlocked(grid, rows, cols, dest)) {
+        if (!isUnBlocked(rows, cols, src)
+                || !isUnBlocked(rows, cols, dest)) {
             System.out.println("Source or destination is blocked...");
-            return;
+            return null;
         }
 
 
         if (isDestination(src, dest)) {
             System.out.println("We're already (t)here...");
-            return;
+            return null;
         }
 
 
@@ -177,10 +178,10 @@ public class Mover {
                         if (isDestination(neighbour, dest)) {
                             cellDetails[neighbour.x()][neighbour.y()].parent = new Coordinates(i, j);
                             System.out.println("The destination cell is found");
-                            tracePath(cellDetails, dest);
-                            return;
+
+                            return tracePath(cellDetails, dest);
                         } else if (!closedList[neighbour.x()][neighbour.y()]
-                                && isUnBlocked(grid, rows, cols, neighbour)) {
+                                && isUnBlocked(rows, cols, neighbour)) {
                             double gNew, hNew, fNew;
                             gNew = cellDetails[i][j].g + 1.0;
                             hNew = calculateHValue(neighbour, dest);
@@ -205,5 +206,6 @@ public class Mover {
         }
 
         System.out.println("Failed to find the Destination Cell");
+        return null;
     }
 }

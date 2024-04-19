@@ -1,7 +1,8 @@
-package GamePackage;
+package GamePackage.Simulation;
 
 import GamePackage.Entyties.Creatures.Herbivore;
 import GamePackage.Entyties.Creatures.Predator;
+import GamePackage.Entyties.Entity;
 import GamePackage.Entyties.Grass;
 import GamePackage.Entyties.Rock;
 import GamePackage.Entyties.Tree;
@@ -33,7 +34,7 @@ public class Renderer {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         createAndAddButtons(frame.getContentPane());
-        frame.getContentPane().add(new GridRenderer());
+        frame.getContentPane().add(new MapRenderer());
         frame.setBounds(760, 340, 400, 400);
         frame.setVisible(true);
     }
@@ -80,6 +81,7 @@ public class Renderer {
 
 
         public void paint(Graphics g) {
+            paintGrid(g);
             paintSprites(g);
         }
 
@@ -90,6 +92,14 @@ public class Renderer {
                 g.drawImage(checkTypeOfEntity(Simulation.getMap().get(coordinates)), coordinates.x() * cellSize, coordinates.y() * cellSize, null);
             }
 
+        }
+        private void paintGrid(Graphics g) {
+            int cellSize = 16;
+            for (int i = 0; i < Simulation.getMapSize() + 1; i++)
+                g.drawLine(0, i * cellSize, Simulation.getMapSize() * cellSize, i * cellSize);
+
+            for (int i = 0; i < Simulation.getMapSize() + 1; i++)
+                g.drawLine(i * cellSize, 0, i * cellSize, Simulation.getMapSize() * cellSize);
         }
 
         private BufferedImage checkTypeOfEntity(Entity entity) {
@@ -104,17 +114,9 @@ public class Renderer {
 
     static class GridRenderer extends JComponent {
         public void paint(Graphics g) {
-            paintGrid(g);
         }
 
-        private void paintGrid(Graphics g) {
-            int cellSize = 16;
-            for (int i = 0; i < Simulation.getMapSize() + 1; i++)
-                g.drawLine(0, i * cellSize, Simulation.getMapSize() * cellSize, i * cellSize);
 
-            for (int i = 0; i < Simulation.getMapSize() + 1; i++)
-                g.drawLine(i * cellSize, 0, i * cellSize, Simulation.getMapSize() * cellSize);
-        }
     }
 
 

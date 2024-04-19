@@ -1,6 +1,5 @@
 package GamePackage.Entyties;
 
-import GamePackage.Entity;
 import GamePackage.Simulation.Coordinates;
 
 public class Grass extends Entity {

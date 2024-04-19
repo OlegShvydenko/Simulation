@@ -1,8 +1,8 @@
 package GamePackage.Simulation;
 
 
-import GamePackage.Entity;
-import GamePackage.Simulation.Actions.Action;
+import GamePackage.Entyties.Entity;
+import GamePackage.Simulation.Actions.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class Simulation {
     private static int moveCounter;
 
-    private ArrayList<Action> initActions;
+    private static ArrayList<Action> initActions;
     private ArrayList<Action> turnActions;
     private static HashMap<Coordinates, Entity> map;
     private static int mapSize;
@@ -40,7 +40,17 @@ public class Simulation {
     }
 
     public void startSimulation() {
-
+        initActions = new ArrayList<>();
+        map = new HashMap<>();
+        initActions.add(new SpawnGrass(10));
+        initActions.add(new SpawnRock(25));
+        initActions.add(new SpawnTree(25));
+        initActions.add(new SpawnHerbivore(7));
+        initActions.add(new SpawnPredator(5));
+        for (Action action: initActions
+             ) {
+            action.perform();
+        }
     }
 
     public void pauseSimulation() {
