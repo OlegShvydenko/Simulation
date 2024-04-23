@@ -1,8 +1,10 @@
-package GamePackage.Entyties.Creatures;
+package ru.course.simulation.entities.creatures;
 
-import GamePackage.Entyties.Entity;
-import GamePackage.Simulation.Coordinates;
-import GamePackage.Simulation.Simulation;
+import ru.course.simulation.entities.Entity;
+import ru.course.simulation.entities.Grass;
+import ru.course.simulation.simulation.Coordinates;
+
+import java.util.Map;
 
 public class Predator extends Creature {
     private final int attackPower;
@@ -19,9 +21,9 @@ public class Predator extends Creature {
     }
 
     @Override
-    public void eat(Entity entity) {
-        this.fullnessOfFood += 5;
-        Simulation.getMap().remove(entity.getCoordinates());
+    public void eat(Entity entity, Map<Coordinates, Entity> map) {
+        this.setFullnessOfFood(this.getFullnessOfFood() + 5);
+        map.remove(entity.getCoordinates());
         this.setAlreadyMoving(true);
     }
 }

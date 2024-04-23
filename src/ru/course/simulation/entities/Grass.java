@@ -1,6 +1,6 @@
-package GamePackage.Entyties;
+package ru.course.simulation.entities;
 
-import GamePackage.Simulation.Coordinates;
+import ru.course.simulation.simulation.Coordinates;
 
 public class Grass extends Entity {
     private int quantity;

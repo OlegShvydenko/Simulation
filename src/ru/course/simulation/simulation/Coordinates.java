@@ -1,4 +1,4 @@
-package GamePackage.Simulation;
+package ru.course.simulation.simulation;
 
 public record Coordinates(int x, int y) {
 

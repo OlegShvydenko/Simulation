@@ -1,12 +1,9 @@
-package GamePackage.Simulation.Actions;
+package ru.course.simulation.simulation.actions;
 
-import GamePackage.Simulation.Coordinates;
-import GamePackage.Simulation.Simulation;
+import ru.course.simulation.entities.Entity;
+import ru.course.simulation.simulation.Coordinates;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.PriorityQueue;
-import java.util.Stack;
+import java.util.*;
 
 public class Mover {
     public static class Details {
@@ -55,9 +52,9 @@ public class Mover {
     //is the cell blocked?
 
     private boolean isUnBlocked(int rows, int cols,
-                        Coordinates point) {
+                        Coordinates point, Map<Coordinates, Entity> map) {
         return isValid(rows, cols, point)
-                && !Simulation.getMap().containsKey(point);
+                && !map.containsKey(point);
     }
 
     //Method to check if destination cell has been already reached
@@ -101,7 +98,7 @@ public class Mover {
     private ArrayList<Coordinates> aStarSearch(Coordinates src,
                                  Coordinates dest,
                                  int rows,
-                                 int cols) {
+                                 int cols, Map<Coordinates, Entity> map) {
 
         if (!isValid(rows, cols, src)) {
             System.out.println("Source is invalid...");
@@ -115,8 +112,8 @@ public class Mover {
         }
 
 
-        if (!isUnBlocked(rows, cols, src)
-                || !isUnBlocked(rows, cols, dest)) {
+        if (!isUnBlocked(rows, cols, src, map)
+                || !isUnBlocked(rows, cols, dest, map)) {
             System.out.println("Source or destination is blocked...");
             return null;
         }
@@ -181,7 +178,7 @@ public class Mover {
 
                             return tracePath(cellDetails, dest);
                         } else if (!closedList[neighbour.x()][neighbour.y()]
-                                && isUnBlocked(rows, cols, neighbour)) {
+                                && isUnBlocked(rows, cols, neighbour, map)) {
                             double gNew, hNew, fNew;
                             gNew = cellDetails[i][j].g + 1.0;
                             hNew = calculateHValue(neighbour, dest);
