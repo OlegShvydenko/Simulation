@@ -1,59 +1,34 @@
-package ru.course.simulation.simulation.actions;
+package ru.course.simulation.controllers.searcher;
 
+import ru.course.simulation.controllers.Coordinates;
 import ru.course.simulation.entities.Entity;
-import ru.course.simulation.simulation.Coordinates;
 
 import java.util.*;
 
-public class Mover {
-    public static class Details {
-        double value;
-        int i;
-        int j;
+public class AStarSearcher {
 
-        public Details(double value, int i, int j) {
-            this.value = value;
-            this.i = i;
-            this.j = j;
-        }
-    }
+    Map<Coordinates, Entity> map;
+    int mapSize;
 
-    public static class Cell {
-        public Coordinates parent;
-        // f = g + h, where h is heuristic
-        public double f, g, h;
-
-        Cell() {
-            parent = new Coordinates(-1, -1);
-            f = -1;
-            g = -1;
-            h = -1;
-        }
-
-        public Cell(Coordinates parent, double f, double g, double h) {
-            this.parent = parent;
-            this.f = f;
-            this.g = g;
-            this.h = h;
-        }
+    public AStarSearcher(Map<Coordinates, Entity> map, int mapSize) {
+        this.map = map;
+        this.mapSize = mapSize;
     }
 
     // method to check if our cell (row, col) is valid
-    private boolean isValid(int rows, int cols,
-                    Coordinates point) {
-        if (rows > 0 && cols > 0)
-            return (point.x() >= 0) && (point.x() < rows)
+    private boolean isValid(Coordinates point) {
+        if (mapSize > 0)
+            return (point.x() >= 0) && (point.x() < mapSize)
                     && (point.y() >= 0)
-                    && (point.y() < cols);
+                    && (point.y() < mapSize);
 
         return false;
     }
 
     //is the cell blocked?
 
-    private boolean isUnBlocked(int rows, int cols,
-                        Coordinates point, Map<Coordinates, Entity> map) {
-        return isValid(rows, cols, point)
+    private boolean isUnBlocked(Coordinates point) {
+        return isValid(point)
                 && !map.containsKey(point);
     }
 
@@ -69,10 +44,8 @@ public class Mover {
 
     // Method for tracking the path from source to destination
 
-    private ArrayList<Coordinates> tracePath(
-            Cell[][] cellDetails,
-            Coordinates dest) {   //A* Search algorithm path
-        System.out.println("The Path:  ");
+    private ArrayList<Coordinates> tracePath(Cell[][] cellDetails, Coordinates dest) {   //A* Search algorithm path
+        //System.out.println("The Path:  ");
 
         Stack<Coordinates> path = new Stack<>();
 
@@ -95,28 +68,25 @@ public class Mover {
 
 // A main method, A* Search algorithm to find the shortest path
 
-    private ArrayList<Coordinates> aStarSearch(Coordinates src,
-                                 Coordinates dest,
-                                 int rows,
-                                 int cols, Map<Coordinates, Entity> map) {
+    public ArrayList<Coordinates> search(Coordinates src, Coordinates dest) {
 
-        if (!isValid(rows, cols, src)) {
-            System.out.println("Source is invalid...");
-            return null;
-        }
+//        if (!isValid(src)) {
+//            System.out.println("Source is invalid...");
+//            return null;
+//        }
 
 
-        if (!isValid(rows, cols, dest)) {
-            System.out.println("Destination is invalid...");
-            return null;
-        }
+//        if (!isValid(dest)) {
+//            System.out.println("Destination is invalid...");
+//            return null;
+//        }
 
 
-        if (!isUnBlocked(rows, cols, src, map)
-                || !isUnBlocked(rows, cols, dest, map)) {
-            System.out.println("Source or destination is blocked...");
-            return null;
-        }
+//        if (!isUnBlocked(src)
+//                || !isUnBlocked(dest)) {
+//            System.out.println("Source or destination is blocked...");
+//            return null;
+//        }
 
 
         if (isDestination(src, dest)) {
@@ -125,9 +95,9 @@ public class Mover {
         }
 
 
-        boolean[][] closedList = new boolean[rows][cols];//our closed list
+        boolean[][] closedList = new boolean[mapSize][mapSize];//our closed list
 
-        Cell[][] cellDetails = new Cell[rows][cols];
+        Cell[][] cellDetails = new Cell[mapSize][mapSize];
 
         int i, j;
         // Initialising of the starting cell
@@ -164,9 +134,9 @@ public class Mover {
             for (int addX = -1; addX <= 1; addX++) {
                 for (int addY = -1; addY <= 1; addY++) {
                     Coordinates neighbour = new Coordinates(i + addX, j + addY);
-                    if (isValid(rows, cols, neighbour)) {
+                    if (isValid(neighbour)) {
                         if (cellDetails[neighbour.x()] == null) {
-                            cellDetails[neighbour.x()] = new Cell[cols];
+                            cellDetails[neighbour.x()] = new Cell[mapSize];
                         }
                         if (cellDetails[neighbour.x()][neighbour.y()] == null) {
                             cellDetails[neighbour.x()][neighbour.y()] = new Cell();
@@ -174,11 +144,11 @@ public class Mover {
 
                         if (isDestination(neighbour, dest)) {
                             cellDetails[neighbour.x()][neighbour.y()].parent = new Coordinates(i, j);
-                            System.out.println("The destination cell is found");
+                            //System.out.println("The destination cell is found");
 
                             return tracePath(cellDetails, dest);
                         } else if (!closedList[neighbour.x()][neighbour.y()]
-                                && isUnBlocked(rows, cols, neighbour, map)) {
+                                && isUnBlocked(neighbour)) {
                             double gNew, hNew, fNew;
                             gNew = cellDetails[i][j].g + 1.0;
                             hNew = calculateHValue(neighbour, dest);

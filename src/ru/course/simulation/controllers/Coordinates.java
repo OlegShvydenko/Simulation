@@ -1,4 +1,4 @@
-package ru.course.simulation.simulation;
+package ru.course.simulation.controllers;
 
 public record Coordinates(int x, int y) {
 

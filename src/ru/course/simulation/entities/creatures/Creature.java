@@ -2,7 +2,7 @@ package ru.course.simulation.entities.creatures;
 
 
 import ru.course.simulation.entities.Entity;
-import ru.course.simulation.simulation.Coordinates;
+import ru.course.simulation.controllers.Coordinates;
 
 import java.util.Map;
 
@@ -10,20 +10,13 @@ import java.util.Map;
 public abstract class Creature extends Entity {
     private int speed;
     private int healthPoints;
-
-    private int fullnessOfFood;
     private boolean alreadyMoving;
 
-    public Creature(Coordinates coordinates, int speed, int healthPoints, int fullnessOfFood){
+    public Creature(Coordinates coordinates){
         super(coordinates);
-        this.speed = speed;
-        this.healthPoints = healthPoints;
-        this.fullnessOfFood = fullnessOfFood;
+
     }
 
-    public int getFullnessOfFood() {
-        return fullnessOfFood;
-    }
 
     public int getHealthPoints() {
         return healthPoints;
@@ -33,9 +26,6 @@ public abstract class Creature extends Entity {
         return speed;
     }
 
-    public void setFullnessOfFood(int fullnessOfFood) {
-        this.fullnessOfFood = fullnessOfFood;
-    }
 
     public void setHealthPoints(int healthPoints) {
         this.healthPoints = healthPoints;
@@ -54,12 +44,10 @@ public abstract class Creature extends Entity {
     }
 
     public void makeMove(Coordinates coordinates, Map<Coordinates, Entity> map) {
-        map.remove(this.getCoordinates());
         this.setCoordinates(coordinates);
-        map.put(coordinates, this);
         this.alreadyMoving = true;
     }
-    public abstract void eat(Entity entity, Map<Coordinates, Entity> map);
+    public abstract void eat(Entity entity);
 
 
 }
